@@ -15,9 +15,16 @@ let ground;
 let platform;
 let box1, box2, box3, box4, box5;
 let log1, log2, log3, log4;
+let pig1, pig2;
+
+let pigShotSound;
+
+let score = 0;
 
 function preload() {
     getBackgroundImg();
+
+    pigShotSound = loadSound("audio/pig_snort.mp3");
 }
 
 function setup() {
@@ -33,11 +40,13 @@ function setup() {
     //Primeiro Andar
     box1 = new Box(700,320, 70,70);
     box2 = new Box(920,320, 70,70);
+    pig1 = new Pig(810,350);
     log1 = new Log(810,260, 300, PI/2);
 
     //Segundo Andar
     box3 = new Box(700,240, 70,70);
     box4 = new Box(920,240, 70,70);
+    pig2 = new Pig(810,226);
     log2 = new Log(810,130, 300, PI/2);
 
     //Teto
@@ -53,9 +62,13 @@ function draw() {
     box1.display();
     box2.display();
     ground.display();
+    pig1.display();
+    pig1.score();
     log1.display();
     box3.display();
     box4.display();
+    pig2.display();
+    pig2.score();
     log2.display();
     box5.display();
     log3.display();
