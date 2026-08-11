@@ -16,15 +16,24 @@ let platform;
 let box1, box2, box3, box4, box5;
 let log1, log2, log3, log4;
 let pig1, pig2;
+let bird1, bird2, bird3, bird4;
+let birds = [];
+let slingshot;
 
 let pigShotSound;
+let birdFlySound;
+let birdSelectSound;
 
 let score = 0;
+
+let gameState = "onSling";
 
 function preload() {
     getBackgroundImg();
 
     pigShotSound = loadSound("audio/pig_snort.mp3");
+    birdFlySound = loadSound("audio/bird_flying.mp3");
+    birdSelectSound = loadSound("audio/bird_select.mp3");
 }
 
 function setup() {
@@ -53,11 +62,33 @@ function setup() {
     box5 = new Box(810,100, 70,70);
     log3 = new Log(760,70, 150, PI/10);
     log4 = new Log(870,70, 150, -PI/10);
+
+    //Birds
+    bird1 = new Bird(200,50);
+    bird2 = new Bird(150,170);
+    bird3 = new Bird(100,170);
+    bird4 = new Bird(50,170);
+    birds.push(bird4, bird3, bird2, bird1);
+
+    slingshot = new Slingshot(bird1.body, {x: 200, y: 50});
 }
 
 function draw() {
     background(backgroundImg);
     Engine.update(engine);
+
+    noStroke();
+    textFont("Impact");
+    textSize(20);
+    fill("red");
+    text("Score: " + score, width - 300,20);
+
+    if(birds.length > 0) {
+        text("Pressione ESPAÇO para o proximo pássaro", width/2 - 200, 25);
+        text("Pássaro: " + birds.length, width/2 - 100, 60);
+    } else {
+        text("Clique no botão Restaurar Nivel do Jogo para reiniciar", width/2 - 200, 70);
+    }
 
     box1.display();
     box2.display();
@@ -73,7 +104,12 @@ function draw() {
     box5.display();
     log3.display();
     log4.display();
+    bird1.display();
+    bird2.display();
+    bird3.display();
+    bird4.display();
     platform.display();
+    slingshot.display();
 }
 
 function getBackgroundImg() {
@@ -86,4 +122,25 @@ function getBackgroundImg() {
     }
 
     backgroundImg = loadImage(bg);
+}
+
+function mouseDragged() {
+    if(gameState !== "launched" && birds.length > 0) {
+        let currentBird = birds[birds.length - 1];
+        Matter.Body.setPosition(currentBird.body, {x: mouseX, y: mouseY});
+
+        return false;
+    }
+}
+
+function mouseReleased() {
+    if(birds.length > 0) {
+        slingshot.fly();
+        birdFlySound.play();
+        birds.pop();
+
+        gameState = "launched";
+    }
+
+    return false;
 }
