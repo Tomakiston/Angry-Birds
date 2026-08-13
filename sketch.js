@@ -2,6 +2,7 @@ const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
+const Constraint = Matter.Constraint;
 
 let engine;
 let world;
@@ -143,4 +144,22 @@ function mouseReleased() {
     }
 
     return false;
+}
+
+function keyPressed() {
+    if(keyCode === 32 && gameState === "launched" && birds.length > 0) {
+        let currentBird = birds[birds.length - 1];
+        Matter.Body.setPosition(currentBird.body, {x: 200, y: 50});
+        slingshot.attach(currentBird.body);
+
+        gameState = "onSling";
+
+        birdSelectSound.play();
+    }
+}
+
+function mousePressed() {
+    if(gameState !== "launched" && birds.length > 0) {
+        birdSelectSound.play()
+    }
 }
